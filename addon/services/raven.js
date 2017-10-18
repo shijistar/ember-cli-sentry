@@ -116,6 +116,8 @@ export default Service.extend({
     if (globalErrorCatching === true) {
       this.enableGlobalErrorCatching();
     }
+
+    this.postSetup();
   },
 
   /**
@@ -281,6 +283,13 @@ export default Service.extend({
   getExtraData() {
     return {};
   },
+
+  /**
+   * Hook that executes after Raven is setup.
+   *
+   * @method postSetup
+   */
+  postSetup() {},
 
   /**
    * Runs a Raven method if it is available.
