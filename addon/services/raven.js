@@ -179,7 +179,9 @@ export default Service.extend({
           return;
         }
 
-        this.captureException(error);
+        this.captureException(error, {
+          extra: this._getExtraData(error)
+        });
         this.didCaptureException(error);
         if (typeof(_oldOnError) === 'function') {
           _oldOnError.call(Ember, error);
@@ -193,17 +195,17 @@ export default Service.extend({
 
         if (typeOf(reason) === 'error') {
           this.captureException(reason, {
-            extra: {
+            extra: assign(this._getExtraData(reason), {
               context: label || this.get('unhandledPromiseErrorMessage'),
-            },
+            }),
           });
           this.didCaptureException(reason);
         } else {
           this.captureMessage(this._extractMessage(reason), {
-            extra: {
+            extra: assign(this._getExtraData(reason), {
               reason,
               context: label,
-            }
+            })
           });
         }
       });
@@ -242,6 +244,10 @@ export default Service.extend({
     return this.ignoreError(error);
   },
 
+  _getExtraData(error) {
+    return assign({}, this.getExtraData(error));
+  },
+
   /**
    * Hook that allows for custom behavior when an
    * error is captured. An example would be to open
@@ -262,6 +268,18 @@ export default Service.extend({
    */
   ignoreError() {
     return false;
+  },
+
+  /**
+   * Hook that gets the extra data of error in global
+   * error catching methods.
+   *
+   * @method getExtraData
+   * @param  {Error} error
+   * @return {Object}
+   */
+  getExtraData() {
+    return {};
   },
 
   /**
