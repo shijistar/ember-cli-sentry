@@ -191,7 +191,7 @@ export default Service.extend({
       };
 
       RSVP.on('error', (reason, label) => {
-        if (this._ignoreError(reason)) {
+        if (this.ignoreReason(reason)) {
           return;
         }
 
@@ -269,6 +269,18 @@ export default Service.extend({
    * @return {Boolean}
    */
   ignoreError() {
+    return false;
+  },
+
+  /**
+ * Hook that allows promise rejection reason filtering
+ * in global error catching methods.
+ *
+ * @method ignoreReason
+ * @param  {String} reason
+ * @return {Boolean}
+ */
+  ignoreReason() {
     return false;
   },
 
